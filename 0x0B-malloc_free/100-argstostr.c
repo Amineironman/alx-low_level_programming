@@ -1,47 +1,48 @@
-#include "holberton.h"
+#include "main.h"
 #include <stdlib.h>
+#include <string.h>
 
 /**
-* *argstostr - concatenates all arguements to the program
-* @ac: arguement count
-* @av: pointer to arguements
-* Return: pointer to new space in memory or null
-**/
+ * argstostr - Concatenate all the arguments.
+ * @ac: input integer.
+ * @av: input character.
+ * Return: concatenated string.
+ */
+
 char *argstostr(int ac, char **av)
 {
-	char *strDup;
-	int i, j, k, size;
+	int i, j, total_len = 0, index = 0;
+	char *concatenated_str;
 
 	if (ac == 0 || av == NULL)
-		return (NULL);
-
-	size = 0;
-	/* count the number of chars in each string */
-	for (i = 0; i < ac; i++)
 	{
-		for (j = 0; av[i][j] != '\0'; j++)
-			size++;
-		size++;
+		return (NULL);
 	}
-	size++;
-
-	 /* allocate memory for total number of chars and
-	 * new line for each word
-	 */
-	strDup = malloc(sizeof(char) * size);
-
-	if (strDup == NULL)
-		return (NULL);
-
-	k = 0;
+	/* Calculate total length : concatenated string */
 	for (i = 0; i < ac; i++)
 	{
-		for (j = 0; av[i][j] != '\0'; j++)
+		for (j = 0; av[i][j]; j++)
 		{
-			strDup[k++] = av[i][j];
+			total_len++;
 		}
-		strDup[k++] = '\n';
+		total_len++; /* add space for newline */
 	}
-	strDup[k] = '\0';
-	return (strDup);
+	total_len++; /* add space for null terminator */
+	concatenated_str = malloc(total_len * sizeof(char));
+	/* Allocate memory for the concatenated string */
+	if (concatenated_str == NULL)
+	{
+		return (NULL);
+	}
+	/* Concatenate the strings */
+	for (i = 0; i < ac; i++)
+	{
+		for (j = 0; av[i][j]; j++)
+		{
+			concatenated_str[index++] = av[i][j];
+		}
+		concatenated_str[index++] = '\n';
+	}
+	concatenated_str[index] = '\0';
+	return (concatenated_str);
 }
