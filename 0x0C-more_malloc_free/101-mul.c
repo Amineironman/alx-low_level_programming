@@ -1,107 +1,92 @@
-#include<string.h>
-#include "main.h"
-
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
 /**
- * isnumber - checks if a string is a number
- * @s: pointer to string
- * Return: 1 if s is a number 0 otherwise
+ * _isnumber - checks if string is number
+ *
+ * @s: string
+ *
+ * Return: 1 if number, 0 if not
  */
-int isnumber(char *s)
+int _isnumber(char *s)
 {
-	while (*s)
-	{
-		if (*s > 58 || *s < 48)
-			return (0);
-		s++;
-	}
-	return (1);
-}
+	int i, check, d;
 
-/**
- * mul2 - multiply two numbers
- * @s1: first number
- * @s2: second number
- * Return: pointer to result
- */
-char *mul2(char *s1, char *s2)
-{
-	int l1, l2, sum = 0, cry = 0, *res, i,
-	    j, n1, n2, r1 = 0, r2 = 0;
-	char *ans;
-
-	if (!isnumber(s1) || !isnumber(s2))
-		return (NULL);
-	l1 = strlen(s1);
-	l2 = strlen(s2);
-	res = malloc((l1 + l2) * sizeof(*res));
-	if (res == NULL)
-		return (NULL);
-	for (i = 0; i < l1 + l2; i++)
-		res[i] = 0;
-	for (i = l1 - 1; i >= 0; i--)
+	d = 0, check = 1;
+	for (i = 0; *(s + i) != 0; i++)
 	{
-		n1 = s1[i] - '0';
-		r2 = 0;
-		cry = 0;
-		for (j = l2 - 1; j >= 0; j--)
+		d = isdigit(*(s + i));
+		if (d == 0)
 		{
-			n2 = s2[j] - '0';
-			sum = (n1 * n2) + res[r1 + r2] + cry;
-			res[r1 + r2] = sum % 10;
-			cry = sum / 10;
-			r2++;
+			check = 0;
+			break;
 		}
-		if (cry > 0)
-			res[r1 + r2] += cry;
-		r1++;
 	}
-	i = l1 + l2 - 1;
-	while (res[i] == 0 && i >= 0)
-		i--;
-	if (i < 0)
-		return ("0");
-	ans = malloc(sizeof(*ans) * (i + 2));
-	for (j = 0; i >= 0; j++, i--)
-		ans[j] = res[i] + '0';
-	ans[j] = '\0';
-	return (ans);
+	return (check);
 }
 
 /**
- * print - prints a string
- * @s: string to print
+ * _callocX - reserves memory initialized to 0
+ *
+ * @nmemb: # of bytes
+ *
+ * Return: pointer
  */
-void print(char *s)
+char *_callocX(unsigned int nmemb)
 {
-	int i = 0;
+	unsigned int i;
+	char *p;
 
-	while (s[i])
-		_putchar(s[i++]);
-	_putchar('\n');
+	p = malloc(nmemb + 1);
+	if (p == 0)
+		return (0);
+	for (i = 0; i < nmemb; i++)
+		p[i] = '0';
+	p[i] = '\0';
+	return (p);
 }
 
 /**
- * main - entry point
- * @argc: argument count
- * @argv: arguments array
- * Return: 0 success 98 error
+ * main - program that multiplies two positive numbers.
+ *
+ * @argc: count
+ * @argv: vector
+ * Return: output
  */
 int main(int argc, char **argv)
 {
+	int i, j, l1, l2, lful, mul, add, ten, ten2, tl, zer = 0;
 	char *res;
 
-	if (argc != 3)
+	if (argc != 3 || _isnumber(argv[1]) == 0 || _isnumber(argv[2]) == 0)
+		printf("Error\n"), exit(98);
+	if (atoi(argv[1]) == 0 || atoi(argv[2]) == 0)
+		printf("0\n"), exit(0);
+	l1 = strlen(argv[1]), l2 = strlen(argv[2]);
+	lful = l1 + l2;
+	res = _callocX(lful);
+	if (res == 0)
+		printf("Error\n"), exit(98);
+	for (i = l2 - 1; i >= 0; i--)
 	{
-		print("Error");
-		exit(98);
+		ten = 0, ten2 = 0;
+		for (j = l1 - 1; j >= 0; j--)
+		{
+			tl = i + j + 1;
+			mul = (argv[1][j] - '0') * (argv[2][i] - '0') + ten;
+			ten =  mul / 10;
+			add = (res[tl] - '0') + (mul % 10) + ten2;
+			ten2 = add / 10;
+			res[tl] = (add % 10) + '0';
+		}
+		res[tl - 1] = (ten + ten2) + '0';
 	}
-	res = mul2(argv[1], argv[2]);
-	if (res == NULL)
-	{
-		print("Error");
-		exit(98);
-	}
-	print(res);
+	if (res[0] == '0')
+		zer = 1;
+	for (; zer < lful; zer++)
+		printf("%c", res[zer]);
+	printf("\n");
+	free(res);
 	return (0);
 }
-
