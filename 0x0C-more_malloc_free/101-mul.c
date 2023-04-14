@@ -1,126 +1,107 @@
+#include<string.h>
 #include "main.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
 
 /**
- * _is_zero - determines if any number is zero
- * @argv: argument vector.
- *
- * Return: no return.
+ * isnumber - checks if a string is a number
+ * @s: pointer to string
+ * Return: 1 if s is a number 0 otherwise
  */
-void _is_zero(char *argv[])
+int isnumber(char *s)
 {
-	int i, isn1 = 1, isn2 = 1;
-
-	for (i = 0; argv[1][i]; i++)
-		if (argv[1][i] != '0')
-		{
-			isn1 = 0;
-			break;
-		}
-
-	for (i = 0; argv[2][i]; i++)
-		if (argv[2][i] != '0')
-		{
-			isn2 = 0;
-			break;
-		}
-
-	if (isn1 == 1 || isn2 == 1)
+	while (*s)
 	{
-		printf("0\n");
-		exit(0);
+		if (*s > 58 || *s < 48)
+			return (0);
+		s++;
 	}
+	return (1);
 }
 
 /**
- * _initialize_array - set memery to zero in a new array
- * @ar: char array.
- * @lar: length of the char array.
- *
- * Return: pointer of a char array.
+ * mul2 - multiply two numbers
+ * @s1: first number
+ * @s2: second number
+ * Return: pointer to result
  */
-char *_initialize_array(char *ar, int lar)
+char *mul2(char *s1, char *s2)
+{
+	int l1, l2, sum = 0, cry = 0, *res, i,
+	    j, n1, n2, r1 = 0, r2 = 0;
+	char *ans;
+
+	if (!isnumber(s1) || !isnumber(s2))
+		return (NULL);
+	l1 = strlen(s1);
+	l2 = strlen(s2);
+	res = malloc((l1 + l2) * sizeof(*res));
+	if (res == NULL)
+		return (NULL);
+	for (i = 0; i < l1 + l2; i++)
+		res[i] = 0;
+	for (i = l1 - 1; i >= 0; i--)
+	{
+		n1 = s1[i] - '0';
+		r2 = 0;
+		cry = 0;
+		for (j = l2 - 1; j >= 0; j--)
+		{
+			n2 = s2[j] - '0';
+			sum = (n1 * n2) + res[r1 + r2] + cry;
+			res[r1 + r2] = sum % 10;
+			cry = sum / 10;
+			r2++;
+		}
+		if (cry > 0)
+			res[r1 + r2] += cry;
+		r1++;
+	}
+	i = l1 + l2 - 1;
+	while (res[i] == 0 && i >= 0)
+		i--;
+	if (i < 0)
+		return ("0");
+	ans = malloc(sizeof(*ans) * (i + 2));
+	for (j = 0; i >= 0; j++, i--)
+		ans[j] = res[i] + '0';
+	ans[j] = '\0';
+	return (ans);
+}
+
+/**
+ * print - prints a string
+ * @s: string to print
+ */
+void print(char *s)
 {
 	int i = 0;
 
-	for (i = 0; i < lar; i++)
-		ar[i] = '0';
-	ar[lar] = '\0';
-	return (ar);
+	while (s[i])
+		_putchar(s[i++]);
+	_putchar('\n');
 }
 
 /**
- * _checknum - determines length of the number
- * and checks if number is in base 10.
- * @argv: arguments vector.
- * @n: row of the array.
- *
- * Return: length of the number.
+ * main - entry point
+ * @argc: argument count
+ * @argv: arguments array
+ * Return: 0 success 98 error
  */
-int _checknum(char *argv[], int n)
+int main(int argc, char **argv)
 {
-	int ln;
-
-	for (ln = 0; argv[n][ln]; ln++)
-		if (!isdigit(argv[n][ln]))
-		{
-			printf("Error\n");
-			exit(98);
-		}
-
-	return (ln);
-}
-
-/**
- * main - Entry point.
- * program that multiplies two positive numbers.
- * @argc: number of arguments.
- * @argv: arguments vector.
- *
- * Return: 0 - success.
- */
-int main(int argc, char *argv[])
-{
-	int ln1, ln2, lnout, add, addl, i, j, k, ca;
-	char *nout;
+	char *res;
 
 	if (argc != 3)
-		printf("Error\n"), exit(98);
-	ln1 = _checknum(argv, 1), ln2 = _checknum(argv, 2);
-	_is_zero(argv), lnout = ln1 + ln2, nout = malloc(lnout + 1);
-	if (nout == NULL)
-		printf("Error\n"), exit(98);
-	nout = _initialize_array(nout, lnout);
-	k = lnout - 1, i = ln1 - 1, j = ln2 - 1, ca = addl = 0;
-	for (; k >= 0; k--, i--)
 	{
-		if (i < 0)
-		{
-			if (addl > 0)
-			{
-				add = (nout[k] - '0') + addl;
-				if (add > 9)
-					nout[k - 1] = (add / 10) + '0';
-				nout[k] = (add % 10) + '0';
-			}
-			i = ln1 - 1, j--, addl = 0, ca++, k = lnout - (1 + ca);
-		}
-		if (j < 0)
-		{
-			if (nout[0] != '0')
-				break;
-			lnout--;
-			free(nout), nout = malloc(lnout + 1), nout = _initialize_array(nout, lnout);
-			k = lnout - 1, i = ln1 - 1, j = ln2 - 1, ca = addl = 0;
-		}
-		if (j >= 0)
-		{
-			add = ((argv[1][i] - '0') * (argv[2][j] - '0')) + (nout[k] - '0') + addl;
-			addl = add / 10, nout[k] = (add % 10) + '0';
-		}
+		print("Error");
+		exit(98);
 	}
-	printf("%s\n", nout);
+	res = mul2(argv[1], argv[2]);
+	if (res == NULL)
+	{
+		print("Error");
+		exit(98);
+	}
+	print(res);
 	return (0);
 }
+
