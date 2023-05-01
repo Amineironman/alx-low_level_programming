@@ -1,6 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/**
+ * main - entry point
+ * @argc: character
+ * @argv: character
+ *
+ * Description: -
+ * Return: -
+ */ 
 int main(int argc, char *argv[])
 {
 	int a, b;
@@ -15,11 +23,3 @@ int main(int argc, char *argv[])
 	printf("%d\n", a * b);
 	return (0);
 }
-/**
- * main - entry point
- * @argc: character
- * @argv: character
- *
- * Description: -
- * Return: -
- */
