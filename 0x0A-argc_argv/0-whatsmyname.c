@@ -1,17 +1,14 @@
 #include <stdio.h>
-
-/**
- * main - entry point
- * @argc: character
- * @argv: character
- *
- * Description: -
- * Return: -
- */
+#include <stdlib.h>
 int main(int argc, char *argv[])
 {
-	(void)argc;
-	printf("%s\n", argv[0]);
+	if (argc > 0)
+		printf("%s\n", argv[0]);
 	return (0);
 }
-
+/**
+* main - entry point
+* @argc: contain number of arguments
+* @argv: pointer of pointers containning strings
+* Return: 0 on success
+*/
