@@ -70,4 +70,3 @@ void free_listp2(listp_t **head)
 		*head = NULL;
 	}
 }
-
